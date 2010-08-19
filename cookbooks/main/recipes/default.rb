@@ -1,8 +1,11 @@
-#execute "testing" do
-#  command %Q{
-#    echo "i ran at #{Time.now}" >> /root/cheftime
-#  }
-#end
+execute "testing" do
+  command %Q{
+    echo "i ran at #{Time.now}" >> /root/cheftime
+  }
+end
+
+# uncomment if you want to run delayed_job recipe
+require_recipe 'delayed_job'
 
 # uncomment if you want to run postgres recipe
 #require_recipe 'postgres'
