@@ -4,7 +4,7 @@
 #
 
 if ['solo', 'util'].include?(node[:instance_role])# && !node[:name].match(/^mongodb_/)
-  node[:applications].each do |app_name,data|
+  run_for_app("echologic_production") do |app_name,data|
 
     # determine the number of workers to run based on instance size
     if node[:instance_role] == 'solo'
@@ -28,7 +28,7 @@ if ['solo', 'util'].include?(node[:instance_role])# && !node[:name].match(/^mong
         variables({
           :app_name => app_name,
           :user => node[:owner_name],
-          :worker_name => "delayed_job#{count+1}",
+          :worker_name => "delayed_job_#{app_name}_#{count+1}",
           :framework_env => node[:environment][:framework_env]
         })
       end
