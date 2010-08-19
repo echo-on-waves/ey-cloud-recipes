@@ -3,9 +3,9 @@
 # Recipe:: default
 #
 
-if ['solo', 'util'].include?(node[:instance_role]) && !node[:name].match(/^mongodb_/)
+if ['solo', 'util'].include?(node[:instance_role])# && !node[:name].match(/^mongodb_/)
   node[:applications].each do |app_name,data|
-  
+
     # determine the number of workers to run based on instance size
     if node[:instance_role] == 'solo'
       worker_count = 1
@@ -14,11 +14,11 @@ if ['solo', 'util'].include?(node[:instance_role]) && !node[:name].match(/^mongo
       when 'm1.small': worker_count = 2
       when 'c1.medium': worker_count = 4
       when 'c1.xlarge': worker_count = 8
-      else 
+      else
         worker_count = 2
       end
     end
-    
+
     worker_count.times do |count|
       template "/etc/monit.d/delayed_job#{count+1}.#{app_name}.monitrc" do
         source "dj.monitrc.erb"
@@ -33,11 +33,11 @@ if ['solo', 'util'].include?(node[:instance_role]) && !node[:name].match(/^mongo
         })
       end
     end
-    
+
     execute "monit-reload-restart" do
        command "sleep 30 && monit quit"
        action :run
     end
-      
+
   end
 end
